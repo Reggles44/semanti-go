@@ -3,9 +3,9 @@ package words
 import "fmt"
 
 type Word struct {
-	Word  string  `json:"word"`
+	Word  string  `json:"w"`
 	N     uint16  `json:"n"`
-	Score float32 `json:"score"`
+	Score float32 `json:"s"`
 }
 
 func (w *Word) String() string {

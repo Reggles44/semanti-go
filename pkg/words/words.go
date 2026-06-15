@@ -16,7 +16,7 @@ var data embed.FS
 var cachedWords = make(map[string]*Words)
 
 type Words struct {
-	Word     string   `json:"word"`
+	Word     string   `json:"w"`
 	TopWords TopWords `json:"top_words"`
 }
 
