@@ -34,3 +34,6 @@ go.work.sum
 # Testing stuff
 save.json
 main
+
+# Added by goreleaser init:
+dist/
