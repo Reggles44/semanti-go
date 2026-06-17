@@ -1,67 +1,76 @@
 package words
 
 import (
-	_ "embed"
-	"encoding/json"
+	"embed"
 	"fmt"
 	"log"
 	"math/rand/v2"
-
-	"github.com/james-bowman/nlp"
-	"github.com/james-bowman/nlp/measures/pairwise"
-	"github.com/sjwhitworth/golearn/base"
-	"github.com/sjwhitworth/golearn/knn"
-	"gonum.org/v1/gonum/mat"
+	"path/filepath"
+	"strings"
 )
 
-//go:embed words.txt
-var data []byte
-var words = []string{}
-var scanner *nlp.LinearScanIndex
+//go:embed data/*
+var data embed.FS
 
-func init() {
-	err := json.Unmarshal(data, &words)
-	if err != nil {
-		log.Fatal(err)
-	}
+var cache map[string]*WordSecret
 
-	scanner = nlp.NewLinearScanIndex(pairwise.CosineDistance)
-	scanner.Index(mat.NewVecDense(len(words), words), "words")
-}
-
-type WordsScores struct {
-	Word    string
+type WordSecret struct {
+	Secret  string
 	Matches map[string]*Word
 }
 
 type Word struct {
 	Word  string
 	Index uint16
-	Score float32
 }
 
 func (w *Word) String() string {
-	return fmt.Sprintf("`%s` (#%v, %.1f)", w.Word, w.Index+2, w.Score)
+	return fmt.Sprintf("`%s` (#%v)", w.Word, w.Index+2)
 }
 
 func (w *Word) Found() string {
-	return fmt.Sprintf("`%s` found! #%v, (%.1f)", w.Word, w.Index+2, w.Score)
+	return fmt.Sprintf("`%s` found! #%v", w.Word, w.Index+2)
 }
 
-func GetWords(topic string) (*WordsScores, error) {
-	ws := &WordsScores{topic, make(map[string]*Word)}
+func GetWords(secret string) (*WordSecret, error) {
+	if words, exists := cache[secret]; exists {
+		return words, nil
+	}
 
+	fileName := secret
+	if !strings.HasSuffix(secret, ".txt") {
+		fileName = secret + ".txt"
+	} else {
+		secret = strings.Replace(secret, ".txt", "", 1)
+	}
+
+	wordData, err := data.ReadFile(filepath.Join("data", fileName))
+	if err != nil {
+		return nil, err
+	}
+
+	ws := &WordSecret{secret, make(map[string]*Word)}
+
+	words := strings.Split(string(wordData), "\n")
+	for i, w := range words {
+		ws.Matches[w] = &Word{w, uint16(i)}
+	}
 
 	return ws, nil
 }
 
-func GetRandomWord() (*WordsScores, error) {
-	word := words[rand.IntN(len(words))]
-	log.Printf("GetRandomWord result %s", word)
-	return GetWords(word)
+func GetRandomWord() (*WordSecret, error) {
+	wordDir, err := data.ReadDir("data")
+	if err != nil {
+		return nil, err
+	}
+
+	secret := wordDir[rand.IntN(len(wordDir))].Name()
+	log.Printf("GetRandomWord result %s", secret)
+	return GetWords(secret)
 }
 
-func (w *WordsScores) GetRandomHint() *Word {
+func (w *WordSecret) GetRandomHint() *Word {
 	n := uint16(5000 - rand.IntN(100))
 	log.Printf("Finding hint with n=%v", n)
 	for _, w := range w.Matches {

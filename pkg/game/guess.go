@@ -19,7 +19,7 @@ func (g *Game) Guess(word string, guesser string) (*words.Word, error) {
 	}
 
 	// Show Match
-	if w, match := avail.TopWords[word]; match {
+	if w, match := avail.Matches[word]; match {
 		g.Discovered[word] = guesser
 		return w, nil
 	}

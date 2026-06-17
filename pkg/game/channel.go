@@ -49,9 +49,9 @@ func (chg *ChannelGame) StartNewGame() *discordgo.MessageEmbed {
 
 	hint := w.GetRandomHint()
 
-	log.Printf("New Game with secret %s", w.Word)
+	log.Printf("New Game with secret %s", w.Secret)
 	chg.ActiveGame = &Game{
-		Answer:     w.Word,
+		Answer:     w.Secret,
 		Discovered: Discovered{"hint": hint.Word},
 		StartTime:  time.Now(),
 	}
@@ -85,7 +85,7 @@ func (chg *ChannelGame) EndActiveGame(winner string, won bool) *discordgo.Messag
 	}
 
 	topWords := make([]*words.Word, 20)
-	for _, w := range finished.Words().TopWords {
+	for _, w := range finished.Words().Matches {
 		if w.Index < 20 {
 			topWords[w.Index] = w
 		}

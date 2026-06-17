@@ -24,7 +24,7 @@ func (g *Game) Duration() time.Duration {
 	return dur.Truncate(time.Second)
 }
 
-func (g *Game) Words() *words.Words {
+func (g *Game) Words() *words.WordSecret {
 	w, err := words.GetWords(g.Answer)
 	if err != nil {
 		log.Print(err)
@@ -45,15 +45,15 @@ func (g *Game) Stats() string {
 }
 
 const (
-	TopHeaderFmt = "\n`%-*s | %4s | %5s`"
-	TopFmt       = "\n`%-*s | %4v | %5v`"
+	TopHeaderFmt = "\n`%-*s | %4s`"
+	TopFmt       = "\n`%-*s | %4v`"
 )
 
 func (g *Game) Top() *discordgo.MessageEmbed {
 	ws := []*words.Word{}
 	wordLen := 0
 
-	for w, wobj := range g.Words().TopWords {
+	for w, wobj := range g.Words().Matches {
 		if _, guessed := g.Discovered[w]; guessed {
 			ws = append(ws, wobj)
 			if len(w) > wordLen {
@@ -67,10 +67,10 @@ func (g *Game) Top() *discordgo.MessageEmbed {
 	})
 
 	desc := strings.Builder{}
-	desc.WriteString(fmt.Sprintf(TopHeaderFmt, wordLen, "Word", "Rank", "Score"))
+	desc.WriteString(fmt.Sprintf(TopHeaderFmt, wordLen, "Word", "Rank"))
 	for i := 0; i < len(ws) && i < 20; i++ {
 		w := ws[i]
-		desc.WriteString(fmt.Sprintf(TopFmt, wordLen, w.Word, w.Index, w.Score))
+		desc.WriteString(fmt.Sprintf(TopFmt, wordLen, w.Word, w.Index))
 	}
 
 	return &discordgo.MessageEmbed{
