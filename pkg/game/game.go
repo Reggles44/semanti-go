@@ -63,14 +63,14 @@ func (g *Game) Top() *discordgo.MessageEmbed {
 	}
 
 	sort.Slice(ws, func(i int, j int) bool {
-		return ws[i].N < ws[j].N
+		return ws[i].Index < ws[j].Index
 	})
 
 	desc := strings.Builder{}
 	desc.WriteString(fmt.Sprintf(TopHeaderFmt, wordLen, "Word", "Rank", "Score"))
 	for i := 0; i < len(ws) && i < 20; i++ {
 		w := ws[i]
-		desc.WriteString(fmt.Sprintf(TopFmt, wordLen, w.Word, w.N, w.Score))
+		desc.WriteString(fmt.Sprintf(TopFmt, wordLen, w.Word, w.Index, w.Score))
 	}
 
 	return &discordgo.MessageEmbed{

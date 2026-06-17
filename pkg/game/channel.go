@@ -86,8 +86,8 @@ func (chg *ChannelGame) EndActiveGame(winner string, won bool) *discordgo.Messag
 
 	topWords := make([]*words.Word, 20)
 	for _, w := range finished.Words().TopWords {
-		if w.N < 20 {
-			topWords[w.N] = w
+		if w.Index < 20 {
+			topWords[w.Index] = w
 		}
 	}
 
