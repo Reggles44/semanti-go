@@ -21,7 +21,12 @@ func init() {
 }
 
 func main() {
-	bot, err := discordgo.New("Bot " + Token)
+	token, exists := os.LookupEnv("BOT_TOKEN")
+	if !exists {
+		log.Fatal("BOT_TOKEN is not set")
+	}
+
+	bot, err := discordgo.New("Bot " + token)
 	if err != nil {
 		log.Fatal("Failed to start bot", err)
 		os.Exit(1)
