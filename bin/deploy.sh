@@ -13,7 +13,7 @@ download_binary() {
 
   curl -sL "$DOWNLOAD_URL" -o semanti.tar.gz
   tar -xf semanti.tar.gz
-  mv semanti /usr/local/bin
+  # mv semanti /usr/local/bin
 }
 
 # setup_service() {
