@@ -9,7 +9,7 @@ import (
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/reggles44/semanti-go/pkg/game"
+	"github.com/reggles44/semanti-go/pkg/channel"
 	"github.com/reggles44/semanti-go/pkg/handlers"
 )
 
@@ -49,5 +49,5 @@ func main() {
 
 	// Cleanly close down the Discord session.
 	bot.Close()
-	game.SaveGames()
+	channel.SaveGames()
 }

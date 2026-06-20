@@ -5,10 +5,10 @@ import (
 	"regexp"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/reggles44/semanti-go/pkg/game"
+	"github.com/reggles44/semanti-go/pkg/channel"
 )
 
-type Handler func(chg *game.ChannelGame, s *discordgo.Session, m *discordgo.MessageCreate)
+type Handler func(chg *channel.ChannelInfo, s *discordgo.Session, m *discordgo.MessageCreate)
 
 var handlers = map[string]Handler{
 	"$agg":   aggregrate,
@@ -23,17 +23,17 @@ var handlers = map[string]Handler{
 var letterRegex = regexp.MustCompile(`^[a-zA-Z]*$`)
 
 func MessageRecieve(s *discordgo.Session, m *discordgo.MessageCreate) {
-	channel, err := s.Channel(m.ChannelID)
+	c, err := s.Channel(m.ChannelID)
 	if err != nil {
 		log.Print(err)
 		return
 	}
 
-	if channel.Name != "semanti" {
+	if c.Name != "semanti" {
 		return
 	}
 
-	chg := game.GetOrCreateChannelGame(m.ChannelID)
+	chg := channel.GetOrCreateChannelGame(m.ChannelID)
 
 	if h, exists := handlers[m.Content]; exists {
 		go h(chg, s, m)

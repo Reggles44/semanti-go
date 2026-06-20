@@ -2,10 +2,10 @@ package handlers
 
 import (
 	"github.com/bwmarrin/discordgo"
-	"github.com/reggles44/semanti-go/pkg/game"
+	"github.com/reggles44/semanti-go/pkg/channel"
 )
 
-func stats(chg *game.ChannelGame, s *discordgo.Session, m *discordgo.MessageCreate) {
+func stats(chg *channel.ChannelInfo, s *discordgo.Session, m *discordgo.MessageCreate) {
 	if chg.ActiveGame != nil {
 		s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{Title: "Stats", Description: chg.ActiveGame.Stats()})
 	} else {

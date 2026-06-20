@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"github.com/bwmarrin/discordgo"
-	"github.com/reggles44/semanti-go/pkg/game"
+	"github.com/reggles44/semanti-go/pkg/channel"
 )
 
 var helpEmbed = &discordgo.MessageEmbed{
@@ -28,6 +28,6 @@ var helpEmbed = &discordgo.MessageEmbed{
 	},
 }
 
-func help(chg *game.ChannelGame, s *discordgo.Session, m *discordgo.MessageCreate) {
+func help(chg *channel.ChannelInfo, s *discordgo.Session, m *discordgo.MessageCreate) {
 	s.ChannelMessageSendEmbed(m.ChannelID, helpEmbed)
 }

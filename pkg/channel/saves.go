@@ -1,4 +1,4 @@
-package game
+package channel
 
 import (
 	"encoding/json"
@@ -9,7 +9,7 @@ import (
 
 const gameFile string = "save.json"
 
-type GamesSaves map[string]*ChannelGame
+type GamesSaves map[string]*ChannelInfo
 
 var saves GamesSaves
 
@@ -42,5 +42,5 @@ func SaveGames() error {
 		return err
 	}
 
-	return os.WriteFile(gameFile, data, 0o644)
+	return os.WriteFile(gameFile, data, 0644)
 }

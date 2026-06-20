@@ -1,6 +1,9 @@
 package game
 
-import "github.com/reggles44/semanti-go/pkg/words"
+import (
+	"github.com/reggles44/semanti-go/pkg/errors"
+	"github.com/reggles44/semanti-go/pkg/words"
+)
 
 type Discovered map[string]string
 
@@ -10,7 +13,7 @@ func (g *Game) Guess(word string, guesser string) (*words.Word, error) {
 
 	// Game Over
 	if word == g.Answer {
-		return nil, GameOver
+		return nil, errors.ErrGameOver
 	}
 
 	// Already Guessed

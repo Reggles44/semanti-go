@@ -2,10 +2,10 @@ package handlers
 
 import (
 	"github.com/bwmarrin/discordgo"
-	"github.com/reggles44/semanti-go/pkg/game"
+	"github.com/reggles44/semanti-go/pkg/channel"
 )
 
-func history(chg *game.ChannelGame, s *discordgo.Session, m *discordgo.MessageCreate) {
+func history(chg *channel.ChannelInfo, s *discordgo.Session, m *discordgo.MessageCreate) {
 	embed := &discordgo.MessageEmbed{
 		Title:  "History",
 		Fields: []*discordgo.MessageEmbedField{},

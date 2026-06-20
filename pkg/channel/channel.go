@@ -1,4 +1,4 @@
-package game
+package channel
 
 import (
 	"fmt"
@@ -7,26 +7,27 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/reggles44/semanti-go/pkg/game"
 	"github.com/reggles44/semanti-go/pkg/words"
 )
 
-type ChannelGame struct {
-	ActiveGame *Game        `json:"game,omitempty"`
+type ChannelInfo struct {
+	ActiveGame *game.Game   `json:"game,omitempty"`
 	Channel    string       `json:"channel"`
 	ChannelID  string       `json:"channel_id"`
 	History    []*GameStats `json:"history"`
 }
 
 type GameStats struct {
-	*Game
+	*game.Game
 	Winner string `json:"author"`
 }
 
-func GetOrCreateChannelGame(channelID string) *ChannelGame {
+func GetOrCreateChannelGame(channelID string) *ChannelInfo {
 	if chg, exists := saves[channelID]; exists {
 		return chg
 	} else {
-		chg := &ChannelGame{
+		chg := &ChannelInfo{
 			ActiveGame: nil,
 			Channel:    "",
 			ChannelID:  channelID,
@@ -36,7 +37,7 @@ func GetOrCreateChannelGame(channelID string) *ChannelGame {
 	}
 }
 
-func (chg *ChannelGame) StartNewGame() *discordgo.MessageEmbed {
+func (chg *ChannelInfo) StartNewGame() *discordgo.MessageEmbed {
 	if chg.ActiveGame != nil {
 		return nil
 	}
@@ -50,9 +51,9 @@ func (chg *ChannelGame) StartNewGame() *discordgo.MessageEmbed {
 	hint := w.GetRandomHint()
 
 	log.Printf("New Game with secret %s", w.Secret)
-	chg.ActiveGame = &Game{
+	chg.ActiveGame = &game.Game{
 		Answer:     w.Secret,
-		Discovered: Discovered{"hint": hint.Word},
+		Discovered: game.Discovered{"hint": hint.Word},
 		StartTime:  time.Now(),
 	}
 
@@ -62,7 +63,7 @@ func (chg *ChannelGame) StartNewGame() *discordgo.MessageEmbed {
 	}
 }
 
-func (chg *ChannelGame) EndActiveGame(winner string, won bool) *discordgo.MessageEmbed {
+func (chg *ChannelInfo) EndActiveGame(winner string, won bool) *discordgo.MessageEmbed {
 	if chg.ActiveGame == nil {
 		return nil
 	}
