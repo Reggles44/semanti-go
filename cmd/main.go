@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -12,13 +11,6 @@ import (
 	"github.com/reggles44/semanti-go/pkg/channel"
 	"github.com/reggles44/semanti-go/pkg/handlers"
 )
-
-var Token string
-
-func init() {
-	flag.StringVar(&Token, "t", "", "Bot Token")
-	flag.Parse()
-}
 
 func main() {
 	token, exists := os.LookupEnv("BOT_TOKEN")
