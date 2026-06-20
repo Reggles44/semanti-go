@@ -16,7 +16,8 @@ before:
     - go generate ./...
 
 builds:
-  - main: ./...
+  - main: ./cmd/main.go
+    binary: semanti
     env:
       - CGO_ENABLED=0
     goos:
